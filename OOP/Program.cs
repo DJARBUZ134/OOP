@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +9,54 @@ namespace OOP
 {
     class Book : Document,IPrintable
     {
-        private string _title { get; set;}
-        private string _author { get; set; }
-        private int _year { get; set; }
+        private string _title 
+        {
+            get
+            {
+                return _title;
+            }
+            set
+            {
+                _title = value;
+            }
+        }
+        private string _author 
+        {
+            get
+            {
+                return _author;
+            }
+            set
+            {
+                _author = value;
+            }
+        }
+        private int _year 
+        {
+            get
+            {
+                return _year;
+            }
+            set
+            {
+                if(value > 1800)
+                {
+                    _year = value;
+                }
+                else
+                {
+                    Console.WriteLine("Значение должно быть больше 1800");
+                }
+            }
+        }
+        public Book(string title, string author, int year)
+        {
+            _title = title;
+            _author = author;
+            _year = year;
+        }
+
+        public static int TotalBooks;
 
         public override string GetDocumentType()
         {
@@ -24,8 +69,9 @@ namespace OOP
         }
         public override string ToString()
         {
-            return base.ToString();
-        }
+            string txt = ($"Название: {_title}, автор: {_author}, год: {_year}");
+            return txt;
+        }       
     }
     abstract class Document 
     {
