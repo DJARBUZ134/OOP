@@ -72,7 +72,7 @@ namespace OOP
         }
         public override string ToString()
         {
-            string txt = ($"Название: {_title}, автор: {_author}, год: {_year}");
+            string txt = ($"Название: {_title} автор: {_author} год: {_year}");
             return txt;
         }
     }
