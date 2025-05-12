@@ -63,6 +63,7 @@ namespace OOP
             throw new NotImplementedException();// тут короче код
         }
 
+
         public string PrintInfo()
         {
             throw new NotImplementedException();// тут короче код
@@ -73,21 +74,11 @@ namespace OOP
             return txt;
         }       
     }
-    abstract class Document 
-    {
-        int id { get; set; }
-        string title { get; set; }
-        public abstract string GetDocumentType();
 
-    }
-    interface IPrintable
-    {
-        string PrintInfo();
-    }
     class Library
     {
-        static List<string> list_book = new List<string>();
-        static void AddBook(string book)
+        static List<Book> list_book = new List<Book>();
+        public void AddBook(Book book)
         {
             Console.Write("Введите название книги которую хотите добавить: ");
             string add_name_book = Convert.ToString(Console.ReadLine());
@@ -122,5 +113,16 @@ namespace OOP
         {
 
         }
+    }
+    abstract class Document
+    {
+        int id;
+        string title;
+        public abstract string GetDocumentType();
+
+    }
+    interface IPrintable
+    {
+        string PrintInfo();
     }
 }
