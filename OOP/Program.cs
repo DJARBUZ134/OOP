@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace OOP
 {
-    public class Book : Document,IPrintable
+    public class Book : Document, IPrintable
     {
         private string title = "Under";
         private string author = "Under";
         private int year = 1801;
 
-        public string _title 
+        public string _title
         {
             get
             {
@@ -21,10 +21,10 @@ namespace OOP
             }
             set
             {
-               title = value;
+                title = value;
             }
         }
-        public string _author 
+        public string _author
         {
             get
             {
@@ -35,7 +35,7 @@ namespace OOP
                 author = value;
             }
         }
-        public int _year 
+        public int _year
         {
             get
             {
@@ -43,14 +43,14 @@ namespace OOP
             }
             set
             {
-                    year = value;
+                year = value;
             }
         }
         public Book()
         {
             _title = "ndan";
-            _author ="fas ";
-            _year =1801;
+            _author = "fas ";
+            _year = 1801;
         }
         public Book(string title, string author, int year)
         {
@@ -74,12 +74,12 @@ namespace OOP
         {
             string txt = ($"Название: {_title}, автор: {_author}, год: {_year}");
             return txt;
-        }       
+        }
     }
 
     public class Library : Book
-    {        
-        private List<Book> list_book = new List<Book>();
+    {
+        private static List<Book> list_book = new List<Book>();
 
         public void AddBook(Book book)
         {
@@ -93,30 +93,45 @@ namespace OOP
             string add_title = Convert.ToString(Console.ReadLine());
 
 
-            // Проверка конвертирования, Не добавлять буквы, Не меньше 1800
-            Console.WriteLine("Введите год");
-            int add_year = Convert.ToInt32(Console.ReadLine());
-
-            Book add_name_book = new Book(add_author, add_title, add_year);
-
-            Console.WriteLine("Подтвердите что хотите добавить данную книгу (y/n)");
-            string add_confirm = Convert.ToString(Console.ReadKey());
-
-            if (add_confirm.ToLower() == "y")
+            Console.WriteLine("Введите год, больше 1800");
+            try
             {
-                if (list_book.Contains(add_name_book) == false)
+                int add_year = Convert.ToInt32(Console.ReadLine());
 
-                    list_book.Add(add_name_book);
+                if (add_year > 1800)
+                {
+                    Book add_name_book = new Book(add_author, add_title, add_year);
+
+                    Console.WriteLine("Подтвердите что хотите добавить данную книгу (y/n)");
+                    string add_confirm = Convert.ToString(Console.ReadLine());
+
+                    if (add_confirm.ToLower() == "y")
+                    {
+                        if (list_book.Contains(add_name_book) == false)
+
+                            list_book.Add(add_name_book);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Книга с таким названием уже имеется в библиотеке");
+                    }
+
+                    obj.Meth();
+                }
+                else
+                {
+                    Console.WriteLine("Год меньше или равен 1800");
+                }
             }
-            else
+            catch
             {
-                Console.WriteLine("Книга с таким названием уже имеется в библиотеке");
+                Console.WriteLine("Неверные данные");
+                Console.ReadKey();
+                obj.Meth();
             }
-
-            obj.Meth();
         }
-    
-        static void RemoveBook(string title) 
+
+        static void RemoveBook(string title)
         {
             Console.Write("Введите название книги которую хотите удалить: ");
             string delete_name_book = Convert.ToString(Console.ReadLine());
@@ -133,9 +148,13 @@ namespace OOP
             string find_name_book = Convert.ToString(Console.ReadLine());
             //list_book.FindAll((find_name_book));
         }
-        static void DisplayAllBook()
+        public void DisplayAllBook()
         {
-
+            for (int i = 0; i <= list_book.Count; i++)
+            {
+                Console.WriteLine($"{list_book[i]}");
+            }
+            Console.ReadKey();
         }
     }
 
@@ -174,12 +193,17 @@ namespace OOP
             Console.WriteLine("5 - Просмотр всех книг ");
 
             string devst = Console.ReadLine();
-            
+
             switch (devst)
             {
                 case "1":
-                    { 
+                    {
                         obj.AddBook(book1);
+                        break;
+                    }
+                case "5":
+                    {
+                        obj.DisplayAllBook();
                         break;
                     }
                 default:
