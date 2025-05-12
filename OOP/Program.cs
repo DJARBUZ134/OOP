@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OOP
 {
-    class Book:Document,IPrintable
+    class Book : Document,IPrintable
     {
         private string _title 
         {
@@ -84,27 +84,39 @@ namespace OOP
     {
         string PrintInfo();
     }
-    class Lybrary
+    class Library
     {
-        private List<Book> list_book;
-        static void AddBook(Book book)
+        static List<string> list_book = new List<string>();
+        static void AddBook(string book)
         {
-
+            Console.Write("Введите название книги которую хотите добавить: ");
+            string add_name_book = Convert.ToString(Console.ReadLine());
+            Console.WriteLine("Подтвердите что хотите добавить данную книгу (y/n)");
+            string add_confirm = Convert.ToString(Console.ReadKey());
+            if (add_confirm.ToLower() == "y")
+            {
+                if (list_book.Contains(Convert.ToString(add_name_book)) == false)
+                    list_book.Add(add_name_book);
+                else
+                    Console.WriteLine("Книга с таким названием уже имеется в библиотеке");
+            }
         }
         static void RemoveBook(string title) 
         {
             Console.Write("Введите название книги которую хотите удалить: ");
-            string name_book = Convert.ToString(Console.ReadLine());
+            string delete_name_book = Convert.ToString(Console.ReadLine());
             Console.WriteLine("Подтвердите что хотите удалить данную книгу (y/n)");
-            string confirm = Convert.ToString(Console.ReadKey());
-            if (confirm.ToLower() == "y" && name_book.ToLower() == )
+            string delete_confirm = Convert.ToString(Console.ReadKey());
+            if (delete_confirm.ToLower() == "y" && delete_name_book.ToLower() == )
             {
 
             }
         }
         static void FindBooksByAuthor(string author)
         {
-
+            Console.WriteLine("Введите автора для поиска: ");
+            string find_name_book = Convert.ToString(Console.ReadLine());
+            //list_book.FindAll((find_name_book));
         }
         static void DisplayAllBook()
         {
