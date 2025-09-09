@@ -1,150 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace OOP
 {
-    public class Book : Document,IPrintable
+    [AttributeUsage(AttributeTargets.Class)]
+    public class AuthorAttribute : Attribute
     {
-        private string title = "Under";
-        private string author = "Under";
-        private int year = 1801;
-
-        public string _title 
-        {
-            get
-            {
-                return title;
-            }
-            set
-            {
-               title = value;
-            }
-        }
-        public string _author 
-        {
-            get
-            {
-                return author;
-            }
-            set
-            {
-                author = value;
-            }
-        }
-        public int _year 
-        {
-            get
-            {
-                return year;
-            }
-            set
-            {
-                    year = value;
-            }
-        }
-        public Book()
-        {
-            _title = "ndan";
-            _author ="fas ";
-            _year =1801;
-        }
-        public Book(string title, string author, int year)
-        {
-            _title = title;
-            _author = author;
-            _year = year;
-        }
-
-        public static int TotalBooks;
-
-        public override string GetDocumentType()
-        {
-            throw new NotImplementedException();// тут короче код
-        }
-
-        public string PrintInfo()
-        {
-            throw new NotImplementedException();// тут короче код
-        }
-        public override string ToString()
-        {
-            string txt = ($"Название: {_title}, автор: {_author}, год: {_year}");
-            return txt;
-        }       
-    }
-
-    public class Library : Book
-    {        
-        private List<Book> list_book = new List<Book>();
-
-        public void AddBook(Book book)
-        {
-            Program obj = new Program();
-            Console.Write("Введите свединие о книги которую хотите добавить: ");
-
-            Console.WriteLine("Введите автора");
-            string add_author = Convert.ToString(Console.ReadLine());
-
-            Console.WriteLine("Введите название");
-            string add_title = Convert.ToString(Console.ReadLine());
-
-
-            // Проверка конвертирования, Не добавлять буквы, Не меньше 1800
-            Console.WriteLine("Введите год");
-            int add_year = Convert.ToInt32(Console.ReadLine());
-
-            Book add_name_book = new Book(add_author, add_title, add_year);
-
-            Console.WriteLine("Подтвердите что хотите добавить данную книгу (y/n)");
-            string add_confirm = Convert.ToString(Console.ReadKey());
-
-            if (add_confirm.ToLower() == "y")
-            {
-                if (list_book.Contains(add_name_book) == false)
-
-                    list_book.Add(add_name_book);
-            }
-            else
-            {
-                Console.WriteLine("Книга с таким названием уже имеется в библиотеке");
-            }
-
-            obj.Meth();
-        }
-    
-        static void RemoveBook(string title) 
-        {
-            Console.Write("Введите название книги которую хотите удалить: ");
-            string delete_name_book = Convert.ToString(Console.ReadLine());
-            Console.WriteLine("Подтвердите что хотите удалить данную книгу (y/n)");
-            string delete_confirm = Convert.ToString(Console.ReadKey());
-            //if (delete_confirm.ToLower() == "y" && delete_name_book.ToLower() == )
-            //{
-
-            //}
-        }
-        static void FindBooksByAuthor(string author)
-        {
-            Console.WriteLine("Введите автора для поиска: ");
-            string find_name_book = Convert.ToString(Console.ReadLine());
-            //list_book.FindAll((find_name_book));
-        }
-        static void DisplayAllBook()
-        {
-
-        }
+        public string Name { get; }
+        public AuthorAttribute(string name) { Name = name; }
     }
 
     public abstract class Document
     {
-        int id;
-        string title;
+        protected int Id;
+        protected string Title;
         public abstract string GetDocumentType();
-
     }
 
     interface IPrintable
@@ -152,43 +22,254 @@ namespace OOP
         string PrintInfo();
     }
 
-    class Program
+    [Author("Иванов")]
+    public class Book : Document, IPrintable
     {
+        private string author = "Under";
+        private int year = 1801;
 
-        public void Meth()
+        public new string Title
         {
-            Console.Clear();
-            Main();
+            get { return base.Title; }
+            set { base.Title = value; }
         }
 
-        public static void Main()
+        public string Author
         {
-            Library obj = new Library();
-            Book book1 = new Book();
+            get { return author; }
+            set { author = value; }
+        }
 
-            Console.WriteLine("Выберите действие: ");
-            Console.WriteLine("1 - Добавить книгу ");
-            Console.WriteLine("2 - Кол-во книг в библиотеке ");
-            Console.WriteLine("3 - Найти книгу по автору ");
-            Console.WriteLine("4 - Удалить книгу по названию");
-            Console.WriteLine("5 - Просмотр всех книг ");
-
-            string devst = Console.ReadLine();
-            
-            switch (devst)
+        public int Year
+        {
+            get { return year; }
+            set
             {
-                case "1":
-                    { 
-                        obj.AddBook(book1);
-                        break;
-                    }
-                default:
-                    {
-                        Console.WriteLine("Нет действия с данным номером");
-                        break;
-                    }
+                if (value <= 1800) throw new ArgumentOutOfRangeException(nameof(Year), "Год должен быть больше 1800");
+                year = value;
             }
         }
 
+        public static int TotalBooks;
+
+        public Book()
+        {
+            Title = "Under";
+            Author = "Under";
+            Year = 1801;
+        }
+
+        public Book(string title, string author, int year)
+        {
+            Title = title;
+            Author = author;
+            Year = year;
+        }
+
+        public override string GetDocumentType()
+        {
+            return "Book";
+        }
+
+        public string PrintInfo()
+        {
+            return ToString();
+        }
+
+        public override string ToString()
+        {
+            return $"Название: {Title}, автор: {Author}, год: {Year}";
+        }
+    }
+
+    public class Library
+    {
+        private readonly List<Book> listBook = new List<Book>();
+
+        public int Count => listBook.Count;
+
+        public void AddBook()
+        {
+            Console.WriteLine("Введите сведения о книге, которую хотите добавить.");
+
+            Console.Write("Автор: ");
+            string addAuthor = (Console.ReadLine() ?? "").Trim();
+
+            Console.Write("Название: ");
+            string addTitle = (Console.ReadLine() ?? "").Trim();
+
+            int addYear;
+            while (true)
+            {
+                Console.Write("Год (число > 1800): ");
+                var raw = Console.ReadLine();
+                if (int.TryParse(raw, out addYear) && addYear > 1800) break;
+                Console.WriteLine("Некорректный год. Повторите ввод.");
+            }
+
+            bool exists = false;
+            foreach (var b in listBook)
+            {
+                if (string.Equals(b.Title, addTitle, StringComparison.OrdinalIgnoreCase))
+                {
+                    exists = true;
+                    break;
+                }
+            }
+            if (exists)
+            {
+                Console.WriteLine("Книга с таким названием уже имеется в библиотеке.");
+                return;
+            }
+
+            var newBook = new Book(addTitle, addAuthor, addYear);
+
+            Console.Write("Подтвердите добавление (y/n): ");
+            var key = Console.ReadKey(intercept: true).KeyChar;
+            Console.WriteLine();
+            if (char.ToLowerInvariant(key) == 'y' || char.ToLowerInvariant(key) == 'н')
+            {
+                listBook.Add(newBook);
+                Book.TotalBooks++;
+                Console.WriteLine($"Добавлена книга: \"{newBook.Title}\" ({newBook.Author}, {newBook.Year})");
+            }
+            else
+            {
+                Console.WriteLine("Действие отменено.");
+            }
+        }
+
+        public void RemoveBook(string title)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                Console.WriteLine("Название не задано.");
+                return;
+            }
+
+            Book book = null;
+            var searchTitle = title.Trim();
+            foreach (var b in listBook)
+            {
+                if (string.Equals(b.Title, searchTitle, StringComparison.OrdinalIgnoreCase))
+                {
+                    book = b;
+                    break;
+                }
+            }
+
+            if (book == null)
+            {
+                Console.WriteLine("Книга не найдена.");
+                return;
+            }
+
+            Console.Write($"Удалить книгу \"{book.Title}\"? (y/n): ");
+            var key = Console.ReadKey(intercept: true).KeyChar;
+            Console.WriteLine();
+            if (char.ToLowerInvariant(key) == 'y' || char.ToLowerInvariant(key) == 'н')
+            {
+                listBook.Remove(book);
+                if (Book.TotalBooks > 0) Book.TotalBooks--;
+                Console.WriteLine("Книга удалена.");
+            }
+            else
+            {
+                Console.WriteLine("Действие отменено.");
+            }
+        }
+
+        public void FindBooksByAuthor(string author)
+        {
+            if (string.IsNullOrWhiteSpace(author))
+            {
+                Console.WriteLine("Автор не задан.");
+                return;
+            }
+
+            author = author.Trim();
+            int foundCount = 0;
+
+            foreach (var b in listBook)
+            {
+                if (string.Equals(b.Author, author, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (foundCount == 0)
+                        Console.WriteLine($"Найдены книги автора \"{author}\":");
+                    Console.WriteLine($"- \"{b.Title}\" ({b.Year})");
+                    foundCount++;
+                }
+            }
+
+            if (foundCount == 0)
+            {
+                Console.WriteLine($"Книги автора \"{author}\" не найдены.");
+            }
+        }
+
+        public void DisplayAllBooks()
+        {
+            if (listBook.Count == 0)
+            {
+                Console.WriteLine("В библиотеке нет книг.");
+                return;
+            }
+
+            Console.WriteLine("Список всех книг:");
+            foreach (var b in listBook)
+            {
+                Console.WriteLine(b.PrintInfo());
+            }
+        }
+    }
+
+    class Program
+    {
+        public static void Main()
+        {
+            var library = new Library();
+
+            while (true)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Выберите действие:");
+                Console.WriteLine("1 - Добавить книгу");
+                Console.WriteLine("2 - Кол-во книг в библиотеке");
+                Console.WriteLine("3 - Найти книгу по автору");
+                Console.WriteLine("4 - Удалить книгу по названию");
+                Console.WriteLine("5 - Просмотр всех книг");
+                Console.WriteLine("0 - Выход");
+                Console.Write("Ваш выбор: ");
+
+                var choice = Console.ReadLine();
+                Console.WriteLine();
+
+                switch (choice)
+                {
+                    case "1":
+                        library.AddBook();
+                        break;
+                    case "2":
+                        Console.WriteLine($"Всего книг в библиотеке: {library.Count} (TotalBooks: {Book.TotalBooks})");
+                        break;
+                    case "3":
+                        Console.Write("Введите автора для поиска: ");
+                        library.FindBooksByAuthor(Console.ReadLine());
+                        break;
+                    case "4":
+                        Console.Write("Введите название книги, которую хотите удалить: ");
+                        library.RemoveBook(Console.ReadLine());
+                        break;
+                    case "5":
+                        library.DisplayAllBooks();
+                        break;
+                    case "0":
+                        return;
+                    default:
+                        Console.WriteLine("Нет действия с данным номером.");
+                        break;
+                }
+            }
+        }
     }
 }
